@@ -129,6 +129,33 @@ namespace TES.Integration.IPSockets
             }
         }
 
+        public bool open(ref string r_error)
+        {
+            try
+            {
+                if (this.p_IPAddress != "")
+                {
+                    this.ipAddress = IPAddress.Parse(this.p_IPAddress);
+                }
+                else
+                {
+                    //this.ipHostInfo = Dns.Resolve(Dns.GetHostName());
+                    this.ipHostInfo = Dns.GetHostEntry(p_IPAddress);
+                    this.ipAddress = this.ipHostInfo.AddressList[0];
+                }
+                this.remoteEP = new IPEndPoint(this.ipAddress, this.p_Port);
+                this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                this.socket.Bind(this.remoteEP);
+                this.socket.Listen(0);
+            }
+            catch (Exception e)
+            {
+                r_error = e.Message;
+                return false;
+            }
+            return true;
+        }
+
         public string p_IPAddress { get; set; }
 
         public int p_Port { get; set; }

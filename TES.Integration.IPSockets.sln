@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TES.Integration.IPSockets", "TES.Integration.IPSockets\TES.Integration.IPSockets.csproj", "{E1E141AB-7481-4B6A-8A55-7CD0F40A9AA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TES.Integration.IPSockets", "TES.Integration.IPSockets\TES.Integration.IPSockets.csproj", "{E1E141AB-7481-4B6A-8A55-7CD0F40A9AA1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_Sandbox", "Test_Sandbox\Test_Sandbox.csproj", "{5F0EE8CF-055A-4D79-88F8-36360A070CEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sockets Test", "Sockets Test\Sockets Test.csproj", "{B5655900-5114-497D-B200-C9A464ED5C14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5F0EE8CF-055A-4D79-88F8-36360A070CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F0EE8CF-055A-4D79-88F8-36360A070CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F0EE8CF-055A-4D79-88F8-36360A070CEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5655900-5114-497D-B200-C9A464ED5C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5655900-5114-497D-B200-C9A464ED5C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5655900-5114-497D-B200-C9A464ED5C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5655900-5114-497D-B200-C9A464ED5C14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
