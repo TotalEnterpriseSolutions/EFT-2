@@ -12,6 +12,7 @@ namespace TES.Integration.IPSockets
         private IPHostEntry ipHostInfo;
         private IPEndPoint remoteEP;
         private Socket socket;
+        private Socket openListenSocket;
 
         public Base(string v_IPAddress, int v_Port, int v_Timeout)
         {
@@ -146,7 +147,36 @@ namespace TES.Integration.IPSockets
                 this.remoteEP = new IPEndPoint(this.ipAddress, this.p_Port);
                 this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 this.socket.Bind(this.remoteEP);
-                this.socket.Listen(0);
+                this.socket.Listen(10);
+            }
+            catch (Exception e)
+            {
+                r_error = e.Message;
+                return false;
+            }
+            return true;
+        }
+
+        public bool openListen(ref string r_error)
+        {
+            try
+            {
+                if (this.p_IPAddress != "")
+                {
+                    this.ipAddress = IPAddress.Parse(this.p_IPAddress);
+                }
+                else
+                {
+                    //this.ipHostInfo = Dns.Resolve(Dns.GetHostName());
+                    this.ipHostInfo = Dns.GetHostEntry(p_IPAddress);
+                    this.ipAddress = this.ipHostInfo.AddressList[0];
+                }
+                this.remoteEP = new IPEndPoint(this.ipAddress, this.p_Port);
+                this.openListenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                this.openListenSocket.Bind(this.remoteEP);
+                this.openListenSocket.Listen(10);
+
+                this.socket = this.openListenSocket.Accept();
             }
             catch (Exception e)
             {
