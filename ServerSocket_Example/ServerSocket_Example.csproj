@@ -49,6 +49,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TES.Integration.IPSockets2\TES.Integration.IPSockets2.csproj">
+      <Project>{df0781a0-7177-4e38-b069-d9ecb8375f8c}</Project>
+      <Name>TES.Integration.IPSockets2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TES.Integration.IPSockets\TES.Integration.IPSockets.csproj">
       <Project>{e1e141ab-7481-4b6a-8a55-7cd0f40a9aa1}</Project>
       <Name>TES.Integration.IPSockets</Name>
