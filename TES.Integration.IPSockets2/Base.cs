@@ -30,8 +30,14 @@ namespace TES.Integration.IPSockets2
             {
                 if (this.socket.Connected)
                 {
+
                     this.socket.Shutdown(SocketShutdown.Both);
                     this.socket.Close();
+                }
+                if (openAcceptSocket.Connected)
+                {
+                    openAcceptSocket.Shutdown(SocketShutdown.Both);
+                    openAcceptSocket.Close();
                 }
                 return true;
             }
