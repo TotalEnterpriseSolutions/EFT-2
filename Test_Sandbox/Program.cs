@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
-using TES.Integration.IPSockets;
+using TES.Integration.IPSockets2;
 
 namespace Test_Sandbox
 {
@@ -22,6 +22,7 @@ namespace Test_Sandbox
             string response = "";
             string receiptText = "";
             string ipAddress = "192.168.1.212";
+            string endOfDataTag = "-x";
 
             int transactionPort = 30500;
             int receiptPort = 30503;
@@ -50,7 +51,7 @@ namespace Test_Sandbox
                             Console.WriteLine(String.Format("{0}: Opened Listen receipt port", DateTime.Now.ToString()));
 
                             bool gotReceipt = false;
-                            gotReceipt = receiptSocket.ReadAll(ref receiptText, ref errorText, 30000, true);
+                            gotReceipt = receiptSocket.ReadAll(ref receiptText, ref errorText, 30000, true, endOfDataTag);
 
                             if (gotReceipt)
                             {
@@ -91,13 +92,22 @@ namespace Test_Sandbox
                         }
 
                         //Read the response
-                        if (transactionSocket.ReadAll(ref response,ref errorText,0,true))
+                        if (transactionSocket.ReadAll(ref response,ref errorText,0,true, endOfDataTag))
                         {
                             Console.WriteLine(String.Format("{0}: Received from transaction request {1}", DateTime.Now.ToString(), response));
                         }
                         else
                         {
                             Console.WriteLine(String.Format("{0}:{1}", DateTime.Now.ToString(), errorText));
+                        }
+
+                        if (receiptSocket.close(ref errorText))
+                        {
+                            Console.WriteLine(String.Format("{0}: Receipt socket closed", DateTime.Now.ToString()));
+                        }
+                        else
+                        {
+                            Console.WriteLine(String.Format("{0}:{1}", DateTime.Now.ToString(),errorText));
                         }
                     }
                     else

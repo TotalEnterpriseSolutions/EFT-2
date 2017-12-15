@@ -34,10 +34,13 @@ namespace TES.Integration.IPSockets2
                     this.socket.Shutdown(SocketShutdown.Both);
                     this.socket.Close();
                 }
-                if (openAcceptSocket.Connected)
+                if (openAcceptSocket != null)
                 {
-                    openAcceptSocket.Shutdown(SocketShutdown.Both);
-                    openAcceptSocket.Close();
+                    if (openAcceptSocket.Connected)
+                    {
+                        openAcceptSocket.Shutdown(SocketShutdown.Both);
+                        openAcceptSocket.Close();
+                    }
                 }
                 return true;
             }
@@ -232,6 +235,7 @@ namespace TES.Integration.IPSockets2
                 }
                 this.remoteEP = new IPEndPoint(this.ipAddress, this.p_Port);
                 this.openAcceptSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                this.openAcceptSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 this.openAcceptSocket.Bind(this.remoteEP);
                 this.openAcceptSocket.Listen(10);
 

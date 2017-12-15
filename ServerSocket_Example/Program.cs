@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
-using TES.Integration.IPSockets;
+using TES.Integration.IPSockets2;
 
 namespace ServerSocket_Example
 {
