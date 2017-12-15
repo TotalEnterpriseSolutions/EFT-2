@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace TES.Integration.IPSockets
+namespace TES.Integration.IPSockets2
 {
     public class Base
     {
@@ -115,7 +115,7 @@ namespace TES.Integration.IPSockets
             }
         }
 
-        public bool ReadAll(ref string r_replymessage, ref string r_error, int v_timeout, bool v_returntrueontimeout)
+        public bool ReadAll(ref string r_replymessage, ref string r_error, int v_timeout, bool v_returntrueontimeout, string v_endOfDataTag)
         {
             byte[] buffer = new byte[0x400];
             StringBuilder builder = new StringBuilder();
@@ -132,12 +132,12 @@ namespace TES.Integration.IPSockets
                 {
                     int count = this.socket.Receive(buffer);
                     builder.Append(Encoding.ASCII.GetString(buffer, 0, count));
-                    if (builder.ToString().IndexOf("-x") > -1)
+                    if (builder.ToString().IndexOf(v_endOfDataTag) > -1)
                     {
                         break;
                     }
                     //receivedData += Encoding.ASCII.GetString(buffer, 0, count);
-                    //if (receivedData.IndexOf("-x") > -1)
+                    //if (receivedData.IndexOf(v_endOfDataTag) > -1)
                     //{
                     //    break;
                     //}

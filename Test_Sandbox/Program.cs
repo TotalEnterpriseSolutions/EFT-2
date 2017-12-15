@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using System.Xml;
 using TES.Integration.IPSockets;
 
 namespace Test_Sandbox
@@ -13,75 +15,83 @@ namespace Test_Sandbox
         static void Main(string[] args)
         {
             string errorText = "";
+            //string requestCPPayment = "-tr10 -am102 -rf99999991 -x";
+            //string requestCPRefund = "-tr58 -am102 -rf99999991 -x";
+            //string requestCNPPayment = "-tr09 -am102 -rf99999991 -x";
             string request = "-tr10 -am102 -rf99999991 -x";
             string response = "";
             string receiptText = "";
+            string ipAddress = "192.168.1.212";
+
+            int transactionPort = 30500;
+            int receiptPort = 30503;
+
+            //string xmlString = "hello -rptc\"<receipt><copy> *CUSTOMER RECEIPT *</copy><header2> Southbank Centre Limited</header2><psn> 03 </psn></receipt>\"";
+            //saveReceiptsToXML(xmlString);
+            //return;
 
             //Base b = new Base("127.0.0.1", 30500, 0);
-            Base b = new Base("192.168.1.212", 30500, 0);
+            Base transactionSocket = new Base(ipAddress, transactionPort, 0);
             try
             {
-                if (b.connect(ref errorText))
+                if (transactionSocket.connect(ref errorText))
                 {
                     Console.WriteLine(String.Format("{0}: Connected to transaction port", DateTime.Now.ToString()));
                     Console.WriteLine();
 
-                    //open the receipt port
-                    //Base r = new Base("127.0.0.1", 30503, 0);
-                    //Base r = new Base("192.168.1.212", 30503, 0);
-                    //if (r.open(ref errorText))
-                    //{
-                    //    Console.WriteLine(String.Format("{0}: Opened receipt port", DateTime.Now.ToString()));
-                    //}
-                    //else
-                    //{
-                    //    Console.WriteLine(String.Format("{0}: Failed to open to receipt port {1}", DateTime.Now.ToString(),errorText));
-                    //}
-
-                    Console.WriteLine();
-
-                    if (b.Write(request, ref errorText))
+                    if (transactionSocket.Write(request, ref errorText))
                     {
                         Console.WriteLine(String.Format("{0}: Sending transaction: {1}", DateTime.Now.ToString(),request));
 
-                        //Read the receipt port
-                        Base w = new Base("192.168.1.212", 30503, 0);
-                        //if (!w.connect(ref errorText))
-                        //{
-                        //    Console.WriteLine(String.Format("{0}: failed to connect to recept socket: {1}", DateTime.Now.ToString(), errorText));
-                        //}
-                        if (w.openListen(ref errorText))
+                        //Open & Listen to the receipt port
+                        Base receiptSocket = new Base("", receiptPort, 0);
+                        if (receiptSocket.OpenAccept(ref errorText))
                         {
                             Console.WriteLine(String.Format("{0}: Opened Listen receipt port", DateTime.Now.ToString()));
+
+                            bool gotReceipt = false;
+                            gotReceipt = receiptSocket.ReadAll(ref receiptText, ref errorText, 30000, true);
+
+                            if (gotReceipt)
+                            {
+                                Console.WriteLine(String.Format("{0}: Got receipt: {1}", DateTime.Now.ToString(), receiptText));
+                                saveReceiptsToXML(receiptText);
+                            }
+                            else
+                            {
+                                Console.WriteLine(String.Format("{0}: Failed to get receipt", DateTime.Now.ToString()));
+                            }
+
+                            // Get Second Receipt - Start
+                            //if (receiptSocket.Accept(ref errorText))
+                            //{
+                            //    Console.WriteLine(String.Format("{0}: Accepting from receipt port", DateTime.Now.ToString()));
+                            //}
+                            //else
+                            //{
+                            //    Console.WriteLine(String.Format("{0}: Failed to accept from receipt port {1}", DateTime.Now.ToString(), errorText));
+                            //}
+
+                            //gotReceipt = false;
+                            //gotReceipt = receiptSocket.ReadAll(ref receiptText, ref errorText, 30000, true);
+
+                            //if (gotReceipt)
+                            //{
+                            //    Console.WriteLine(String.Format("{0}: Got receipt: {1}", DateTime.Now.ToString(), receiptText));
+                            //    saveReceiptsToXML(receiptText);
+                            //}
+                            //else
+                            //{
+                            //    Console.WriteLine(String.Format("{0}: Failed to get receipt", DateTime.Now.ToString()));
+                            //}
                         }
                         else
                         {
                             Console.WriteLine(String.Format("{0}: Failed to openListen to receipt port {1}", DateTime.Now.ToString(), errorText));
                         }
 
-                        bool gotReceipt = false;
-                        //int counter = 1;
-
-                        //while (gotReceipt = false || counter < 2)
-                        //{
-                        //    counter += 1;
-                            gotReceipt = w.Read(ref receiptText, ref errorText, 30000, true);
-                        //    Console.WriteLine(string.Format("Try {0}:{1}:{2}", counter.ToString(), receiptText, errorText));
-                            Console.WriteLine(string.Format("Read {0}:{1}", receiptText, errorText));
-                        //    //Thread.Sleep(1000);
-                        //}
-
-                        if (gotReceipt)
-                        {
-                            Console.WriteLine(String.Format("{0}: Got receipt: {1}", DateTime.Now.ToString(), receiptText));
-                        }
-                        else
-                        {
-                            Console.WriteLine(String.Format("{0}: Failed to get receipt", DateTime.Now.ToString()));
-                        }
-
                         //Read the response
-                        if (b.Read(ref response,ref errorText,0,true))
+                        if (transactionSocket.ReadAll(ref response,ref errorText,0,true))
                         {
                             Console.WriteLine(String.Format("{0}: Received from transaction request {1}", DateTime.Now.ToString(), response));
                         }
@@ -107,6 +117,35 @@ namespace Test_Sandbox
             }
             Console.WriteLine(String.Format("{0}: End of Transaction.", DateTime.Now.ToString()));
             Console.Read();
+        }
+
+        static void saveReceiptsToXML(string receiptText)
+        {
+            // Write Receipts To XML and File
+            //XmlDocument custXmlFile = new XmlDocument();
+            //custXmlFile.LoadXml(getReceiptXMLFromReceiptText(receiptText, "-rptc\"", "\""));
+            //custXmlFile.Save("C:\\TES\\IPSocketTesting\\test.xml");
+
+            XmlDocument custXmlFile = new XmlDocument();
+            custXmlFile.LoadXml(getReceiptXMLFromReceiptText(receiptText, "-rptc\"", "\" -rptm"));
+            custXmlFile.Save("C:\\TES\\IPSocketTesting\\CustReceipt.xml");
+
+            XmlDocument vendXmlFile = new XmlDocument();
+            vendXmlFile.LoadXml(getReceiptXMLFromReceiptText(receiptText, "-rptm\"", "\" -x"));
+            vendXmlFile.Save("C:\\TES\\IPSocketTesting\\VendReceipt.xml");
+        }
+
+        static string getReceiptXMLFromReceiptText(string receiptText, string startString, string endString)
+        {
+            int startIndex = receiptText.IndexOf(startString) + startString.Length;
+            int endIndex = receiptText.LastIndexOf(endString);
+            int length = endIndex - startIndex;
+
+            string xmlString = receiptText.Substring(startIndex, length);
+
+            xmlString = "<receipt>" + xmlString + "</receipt>"; // needs a root element
+
+            return xmlString;
         }
     }
 }

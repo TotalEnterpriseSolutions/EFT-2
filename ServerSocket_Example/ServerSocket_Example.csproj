@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2C614B84-B7C1-4A0E-9855-1F10FBFFE46E}</ProjectGuid>
+    <ProjectGuid>{F95A94D1-31C0-46BB-97F8-0B50F2550ACA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Test_Sandbox_4</RootNamespace>
-    <AssemblyName>Test_Sandbox_4</AssemblyName>
+    <RootNamespace>ServerSocket_Example</RootNamespace>
+    <AssemblyName>ServerSocket_Example</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

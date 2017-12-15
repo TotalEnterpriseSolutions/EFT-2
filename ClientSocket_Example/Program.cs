@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net;
 using TES.Integration.IPSockets;
 
-namespace Test_Sandbox_4
+namespace ClientSocket_Example
 {
     class Program
     {
@@ -15,29 +16,22 @@ namespace Test_Sandbox_4
             string errorText = "";
             string request = "-tr10 -am102 -rf99999991 -x";
 
-            //Base w = new Base("192.168.1.212", 30503, 0);
+            IPHostEntry localIPHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress localIPAddress = localIPHostInfo.AddressList[1]; // If you get address incompatible error try using 1 instead of 0
+
+            Base socketHandler = new Base(localIPAddress.ToString(), 30503, 0);
             try
             {
-                //if (w.open(ref errorText))
-                ////{
-                ////    Console.WriteLine(String.Format("{0}: Opened receipt port", DateTime.Now.ToString()));
-                ////}
-                ////else
-                ////{
-                ////    Console.WriteLine(String.Format("{0}: Failed to open to receipt port {1}", DateTime.Now.ToString(), errorText));
-                ////}
-
-                Base w = new Base("192.168.1.212", 30503, 0);
-                if (w.connect(ref errorText))
+                if (socketHandler.connect(ref errorText))
                 {
-                    Console.WriteLine(String.Format("{0}: Connected to receipt port", DateTime.Now.ToString()));
+                    Console.WriteLine(String.Format("{0}: Connected to socket", DateTime.Now.ToString()));
                 }
                 else
                 {
                     Console.WriteLine(String.Format("{0}:{1}", DateTime.Now.ToString(), errorText));
                 }
 
-                if (w.Write(request, ref errorText))
+                if (socketHandler.Write(request, ref errorText))
                 {
                     Console.WriteLine(String.Format("{0}: Sending transaction: {1}", DateTime.Now.ToString(), request));
                 }
