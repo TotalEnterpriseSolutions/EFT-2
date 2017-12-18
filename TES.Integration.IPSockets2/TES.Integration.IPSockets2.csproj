@@ -52,5 +52,8 @@
   <ItemGroup>
     <None Include="snk.snk" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Socket Code Examples.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
