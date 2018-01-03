@@ -249,6 +249,36 @@ namespace TES.Integration.IPSockets2
             return true;
         }
 
+        public bool OpenReceivingSocket(ref string r_error)
+        {
+            try
+            {
+                if (this.p_IPAddress != "")
+                {
+                    this.ipAddress = IPAddress.Parse(this.p_IPAddress);
+                }
+                else
+                {
+                    //this.ipHostInfo = Dns.Resolve(Dns.GetHostName());
+                    this.ipHostInfo = Dns.GetHostEntry(p_IPAddress);
+                    this.ipAddress = this.ipHostInfo.AddressList[1]; // If you get address incompatible error try using 1 instead of 0 
+                }
+                this.remoteEP = new IPEndPoint(this.ipAddress, this.p_Port);
+                this.openAcceptSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                this.openAcceptSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                this.openAcceptSocket.Bind(this.remoteEP);
+                this.openAcceptSocket.Listen(10);
+
+                //this.socket = this.openAcceptSocket.Accept();
+            }
+            catch (Exception e)
+            {
+                r_error = e.Message;
+                return false;
+            }
+            return true;
+        }
+
         public bool Accept(ref string r_error)
         {
             try
@@ -273,6 +303,10 @@ namespace TES.Integration.IPSockets2
             return true;
         }
 
+        public bool OpenAcceptReadable()
+        {
+            return (openAcceptSocket.Poll(1, SelectMode.SelectRead));
+        }
         public string p_IPAddress { get; set; }
 
         public int p_Port { get; set; }
