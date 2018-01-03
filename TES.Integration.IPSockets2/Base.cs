@@ -36,11 +36,11 @@ namespace TES.Integration.IPSockets2
                 }
                 if (openAcceptSocket != null)
                 {
-                    if (openAcceptSocket.Connected)
-                    {
+                    //if (openAcceptSocket.Connected)
+                    //{
                         openAcceptSocket.Shutdown(SocketShutdown.Both);
                         openAcceptSocket.Close();
-                    }
+                    //}
                 }
                 return true;
             }
@@ -235,7 +235,7 @@ namespace TES.Integration.IPSockets2
                 }
                 this.remoteEP = new IPEndPoint(this.ipAddress, this.p_Port);
                 this.openAcceptSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                this.openAcceptSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                //this.openAcceptSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 this.openAcceptSocket.Bind(this.remoteEP);
                 this.openAcceptSocket.Listen(10);
 
@@ -306,6 +306,10 @@ namespace TES.Integration.IPSockets2
         public bool OpenAcceptReadable()
         {
             return (openAcceptSocket.Poll(1, SelectMode.SelectRead));
+        }
+        public bool OpenAcceptWritable()
+        {
+            return (openAcceptSocket.Poll(1, SelectMode.SelectWrite));
         }
         public string p_IPAddress { get; set; }
 

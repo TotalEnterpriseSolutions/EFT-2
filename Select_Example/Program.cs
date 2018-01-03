@@ -25,6 +25,10 @@ namespace Select_Example
 
             Console.WriteLine("Socket Open");
 
+            //Test status here. TRUE as the socket is open
+            bool writeResult = w.OpenAcceptWritable();
+            Console.WriteLine("Write: " + writeResult.ToString());
+
             //Test status here. FALSE as nothing has been written to the socket
             bool result = w.OpenAcceptReadable();
             Console.WriteLine(result.ToString());
@@ -41,9 +45,19 @@ namespace Select_Example
             w.ReadAll(ref replymessage, ref errortext, 0, false, "-x");
             Console.WriteLine(replymessage);
 
+            //Test status here. TRUE as the socket is open
+            writeResult = w.OpenAcceptWritable();
+            Console.WriteLine("Write: " + writeResult.ToString());
+
             //Test status here. FALSE as something has been read off the socket to the socket
             result = w.OpenAcceptReadable();
             Console.WriteLine(result.ToString());
+
+            w.close(ref errortext);
+            
+            //Test status here. FALSE as the socket is closed
+            writeResult = w.OpenAcceptWritable();
+            Console.WriteLine("Write: " + writeResult.ToString());
 
             Console.ReadLine();
 
