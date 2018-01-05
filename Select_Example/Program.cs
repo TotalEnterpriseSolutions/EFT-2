@@ -26,7 +26,7 @@ namespace Select_Example
             Console.WriteLine("Socket Open");
 
             //Test status here. TRUE as the socket is open
-            bool writeResult = w.OpenAcceptWritable();
+            bool writeResult = w.OpenAcceptIsBound();
             Console.WriteLine("Write: " + writeResult.ToString());
 
             //Test status here. FALSE as nothing has been written to the socket
@@ -46,7 +46,7 @@ namespace Select_Example
             Console.WriteLine(replymessage);
 
             //Test status here. TRUE as the socket is open
-            writeResult = w.OpenAcceptWritable();
+            writeResult = w.OpenAcceptIsBound();
             Console.WriteLine("Write: " + writeResult.ToString());
 
             //Test status here. FALSE as something has been read off the socket to the socket
@@ -54,9 +54,10 @@ namespace Select_Example
             Console.WriteLine(result.ToString());
 
             w.close(ref errortext);
-            
+            //writer.close(ref errortext);
+
             //Test status here. FALSE as the socket is closed
-            writeResult = w.OpenAcceptWritable();
+            writeResult = w.OpenAcceptIsBound();
             Console.WriteLine("Write: " + writeResult.ToString());
 
             Console.ReadLine();

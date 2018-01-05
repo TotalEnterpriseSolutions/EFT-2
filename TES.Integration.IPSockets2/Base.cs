@@ -28,17 +28,20 @@ namespace TES.Integration.IPSockets2
         {
             try
             {
-                if (this.socket.Connected)
+                if (this.socket != null)
                 {
+                    if (this.socket.Connected)
+                    {
 
-                    this.socket.Shutdown(SocketShutdown.Both);
-                    this.socket.Close();
+                        this.socket.Shutdown(SocketShutdown.Both);
+                        this.socket.Close();
+                    }
                 }
                 if (openAcceptSocket != null)
                 {
                     //if (openAcceptSocket.Connected)
                     //{
-                        openAcceptSocket.Shutdown(SocketShutdown.Both);
+                        //openAcceptSocket.Shutdown(SocketShutdown.Both);
                         openAcceptSocket.Close();
                     //}
                 }
@@ -265,7 +268,7 @@ namespace TES.Integration.IPSockets2
                 }
                 this.remoteEP = new IPEndPoint(this.ipAddress, this.p_Port);
                 this.openAcceptSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                this.openAcceptSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                //this.openAcceptSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 this.openAcceptSocket.Bind(this.remoteEP);
                 this.openAcceptSocket.Listen(10);
 
@@ -307,10 +310,13 @@ namespace TES.Integration.IPSockets2
         {
             return (openAcceptSocket.Poll(1, SelectMode.SelectRead));
         }
-        public bool OpenAcceptWritable()
+
+        public bool OpenAcceptIsBound()
         {
-            return (openAcceptSocket.Poll(1, SelectMode.SelectWrite));
+            //return (openAcceptSocket.Poll(1, SelectMode.SelectWrite));
+            return (openAcceptSocket.IsBound);
         }
+
         public string p_IPAddress { get; set; }
 
         public int p_Port { get; set; }
